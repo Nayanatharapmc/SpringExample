@@ -1,18 +1,20 @@
 package com.loose.coupling;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 public class LooseCouplingExample {
     public static void main(String[] args){
-        // This is not inversion of control. We are creating and managing objects in the source code itself. But in Spring it creates and manages the objects so we need to create it in the source code
-        UserDataProvider databaseProvider = new UserDatabaseProvider();
-        UserManager userManagerWithDB = new UserManager(databaseProvider);
+        // This is inversion of control. Bean creation and management done by Spring Framework
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationLooseCouplingInjection.xml");
+
+        UserManager userManagerWithDB = (UserManager) context.getBean("databaseProvider");
         System.out.println(userManagerWithDB.getUserInfo());
 
-        UserDataProvider webserviceProvider = new WebServieDataProvider();
-        UserManager userManagerWithWeb = new UserManager(webserviceProvider);
+        UserManager userManagerWithWeb = (UserManager) context.getBean("webServiceDataProvider");
         System.out.println(userManagerWithWeb.getUserInfo());
 
-        UserDataProvider newDBProvider = new NewDBProvider();
-        UserManager userManagerWithNewDB = new UserManager(newDBProvider);
+        UserManager userManagerWithNewDB = (UserManager) context.getBean("newDBProvider");
         System.out.println(userManagerWithNewDB.getUserInfo());
     }
 }
